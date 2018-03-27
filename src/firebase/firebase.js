@@ -11,3 +11,7 @@ messagingSenderId: "972958693195"
 };
 
 firebase.initializeApp(config);
+
+firebase.database().ref().set({
+    name: 'Nwoke Promise'
+});

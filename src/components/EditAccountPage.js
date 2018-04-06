@@ -1,32 +1,44 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AccountForm from './AccountForm';
-import { editAccount, removeAccount } from '../actions/accounts';
+import { startEditAccount, startRemoveAccount } from '../actions/accounts';
 
-const EditAccountPage = (props) => {
-    console.log(props);
-    return (
-        <div>
-            <h1>Edit Account</h1>
-            <AccountForm 
-                account={props.account}
-                onSubmit={(account) => {
-                    props.dispatch(editAccount(props.account.id, account));
-                    props.history.push('/');
-                }}
-            />
-            <button onClick={() => {
-                props.dispatch(removeAccount({ id: props.account.id }));
-                props.history.push('/');
-            }}>Remove</button>
-        </div>
-    );
-};
-
-const mapStateToProps = (state, props) => {
-    return {
-        account: state.accounts.find((account) => account.id === props.match.params.id)
+class EditAccountPage extends React.Component {
+    onSubmit = (account) => {
+        this.props.startEditAccount(this.props.account.id, account);
+        this.props.history.push('/');
     };
+    onRemove = () => {
+        this.props.dispatch(startRemoveAccount({ id: this.props.account.id }));
+        this.props.history.push('/');
+    };
+    render() {
+        return (
+            <div>
+                <div className="page-header">
+                    <div className="content-container">
+                        <h1 className="page-header__title">Edit Account</h1>
+                    </div>
+                </div>
+                <div className="content-container">
+                    <AccountForm
+                        account={this.props.account}
+                        onSubmit={this.onSubmit}
+                    />
+                    <button className="button button--secondary" onClick={this.onRemove}>Remove Account</button>
+                </div>
+            </div>
+        );
+    }
 };
 
-export default connect(mapStateToProps)(EditAccountPage);
+const mapStateToProps = (state, props) => ({
+    account: state.accounts.find((account) => account.id === props.match.params.id)
+});
+
+const mapDispatchToProps = (dispatch, props) => ({
+    startEditAccount: (id, account) => dispatch(startEditAccount(id, account)),
+    startRemoveAccount: (data) => dispatch(startRemoveAccount(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditAccountPage);

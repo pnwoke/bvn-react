@@ -22,6 +22,8 @@ export default (state = accountsReducerDefaultState, action) => {
                     return account;
                 };
             });
+        case 'SET_ACCOUNTS':
+            return action.accounts
     
         default:
             return state;

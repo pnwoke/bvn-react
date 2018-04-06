@@ -16,34 +16,45 @@ class AccountListFiters extends React.Component {
     };
     render() {
         return (
-            <div>
-                <input 
-                    type="text" 
-                    value={this.props.filters.text} 
-                    onChange={(e) => {
-                        this.props.dispatch(setTextFilter(e.target.value));
-                    }}
-                />
-                <select 
-                    value={this.props.filters.sortBy} 
-                    onChange={(e) => {
-                        if (e.target.value === 'date') {
-                                this.props.dispatch(sortByDate());
-                        }
-                    }}
-                >
-                    <option>date</option>
-                </select>
-                <DateRangePicker 
-                    startDate={this.props.filters.startDate}
-                    endDate={this.props.filters.endDate}
-                    onDatesChange={this.onDatesChange}
-                    focusedInput={this.state.calenderFocused}
-                    onFocusChange={this.onFocusChange}
-                    showClearDates={true}
-                    numberOfMonths={1}
-                    isOutsideRange={() => false}
-                />
+            <div className="content-container">
+                <div className="input-group">
+                    <div className="input-group__item">
+                        <input
+                            type="text"
+                            className="text-input"
+                            placeholder="Search Accounts"
+                            value={this.props.filters.text}
+                            onChange={(e) => {
+                                this.props.dispatch(setTextFilter(e.target.value));
+                            }}
+                        />
+                    </div>
+                    <div className="input-group__item">
+                        <select
+                            className="select"
+                            value={this.props.filters.sortBy}
+                            onChange={(e) => {
+                                if (e.target.value === 'date') {
+                                    this.props.dispatch(sortByDate());
+                                }
+                            }}
+                        >
+                            <option>date</option>
+                        </select>
+                    </div>
+                    <div className="input-group__item">
+                        <DateRangePicker
+                            startDate={this.props.filters.startDate}
+                            endDate={this.props.filters.endDate}
+                            onDatesChange={this.onDatesChange}
+                            focusedInput={this.state.calenderFocused}
+                            onFocusChange={this.onFocusChange}
+                            showClearDates={true}
+                            numberOfMonths={1}
+                            isOutsideRange={() => false}
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

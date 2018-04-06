@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default class AccountForm extends React.Component {
     constructor(props) {
@@ -60,39 +61,42 @@ export default class AccountForm extends React.Component {
     };
     render() {
         return (
-            <div>
-                {this.state.error && <p>{this.state.error}</p>}
-                <form onSubmit={this.onSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Surname"
-                        autoFocus
-                        value={this.state.surName}
-                        onChange={this.onSurNameChange}
-                    />
-                    <input
-                        type="text"
-                        placeholder="First Name"
-                        value={this.state.firstName}
-                        onChange={this.onFirstNameChange}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Other Name"
-                        value={this.state.otherName}
-                        onChange={this.onOtherNameChange}
-                    />
-                    <SingleDatePicker
-                        date={this.state.dateOfBirth}
-                        onDateChange={this.onDateChange}
-                        focused={this.state.calenderFocused}
-                        onFocusChange={this.onFocusChange}
-                        numberOfMonths={1}
-                        isOutsideRange={() => false}
-                    />
-                    <button>Add Account</button>
-                </form>
-            </div>
+            <form onSubmit={this.onSubmit}>
+                {this.state.error && <p className="form__error">{this.state.error}</p>}
+                <input
+                    type="text"
+                    placeholder="Surname"
+                    autoFocus
+                    className="text-input"
+                    value={this.state.surName}
+                    onChange={this.onSurNameChange}
+                />
+                <input
+                    type="text"
+                    className="text-input"
+                    placeholder="First Name"
+                    value={this.state.firstName}
+                    onChange={this.onFirstNameChange}
+                />
+                <input
+                    type="text"
+                    className="text-input"
+                    placeholder="Other Name"
+                    value={this.state.otherName}
+                    onChange={this.onOtherNameChange}
+                />
+                <SingleDatePicker
+                    date={this.state.dateOfBirth}
+                    onDateChange={this.onDateChange}
+                    focused={this.state.calenderFocused}
+                    onFocusChange={this.onFocusChange}
+                    numberOfMonths={1}
+                    isOutsideRange={() => false}
+                />
+                <div>
+                    <button className="button">Save Account</button>
+                </div>
+            </form>
         )
     }
 }

@@ -1,18 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux'; 
 import AccountForm from './AccountForm';
-import { addAccount } from '../actions/accounts';
+import { startAddAccount } from '../actions/accounts';
 
-const AddAccountPage = (props) => (
-    <div>
-        <h1>Add New Account</h1>
-        <AccountForm
-            onSubmit={(account) => {
-                props.dispatch(addAccount(account));
-                props.history.push('/');
-            }}
-        />
-    </div>
-);
+export class AddAccountPage extends React.Component {
+    onSubmit = (account) => {
+        this.props.startAddAccount(account);
+        this.props.history.push('/');
+    };
+    render() {
+        return (
+            <div>
+                <div className="page-header">
+                    <div className="content-container">
+                        <h1 className="page-header__title">Add New BVN Account</h1>
+                    </div>
+                </div>
+                <div className="content-container">
+                    <AccountForm
+                        onSubmit={this.onSubmit}
+                    />
+                </div>
+            </div>
+        );
+    }
+};
 
-export default connect()(AddAccountPage);
+const mapDispatchToProps = (dispatch) => ({
+    startAddAccount: (account) => dispatch(startAddAccount(account))
+});
+
+export default connect(undefined, mapDispatchToProps)(AddAccountPage);

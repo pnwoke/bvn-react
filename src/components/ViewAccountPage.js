@@ -21,9 +21,7 @@ class ViewAccountPage extends React.Component {
                     </div>
                 </div>
                 <div className="content-container">
-                    <AccountView
-                        account={this.props.account}
-                    />
+                    
                     <button className="button button--secondary" onClick={this.onSubmit}>Verify Account</button>
                     <button className="button button--secondary" onClick={this.onRemove}>Remove Account</button>
                 </div>

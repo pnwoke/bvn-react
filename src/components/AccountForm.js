@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import Webcam from 'react-webcam';
+import blobToBase64 from 'blob-to-base64';
+// import Webcam from 'react-webcam';
+import Camera from 'react-camera';
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -20,7 +22,31 @@ export default class AccountForm extends React.Component {
             createdAt: props.account ? moment(props.account.createdAt) : '',
             imageUrl: props.account ? props.account.imageUrl : '',
             calenderFocused: false,
-            error: ''
+            error: '',
+            style: {
+                preview: {
+                    position: 'relative',
+                },
+                captureContainer: {
+                    display: 'flex',
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    zIndex: 1,
+                    bottom: 0,
+                    width: '100%'
+                },
+                captureButton: {
+                    backgroundColor: '#fff',
+                    borderRadius: '50%',
+                    height: 56,
+                    width: 56,
+                    color: '#000',
+                    margin: 20
+                },
+                captureImage: {
+                    width: '100%',
+                }
+            }
         };
     }
     
@@ -67,8 +93,17 @@ export default class AccountForm extends React.Component {
         e.preventDefault();
 
         if (!this.state.imageUrl) {
-            const imageUrl = this.webcam.getScreenshot();;
-            this.setState(() => ({ imageUrl }));
+            this.camera.capture()
+            .then(blob => {
+                this.img.src = URL.createObjectURL(blob);
+                this.img.onload = () => { URL.revokeObjectURL(this.src); }
+                blobToBase64(blob, function (error, base64) {
+                    if (!error) {
+                        this.setState(() => ({ imageUrl: base64 }));
+                    }
+                });
+            });
+            
         } else {
             this.setState(() => ({ imageUrl: '' }));
         }
@@ -100,11 +135,19 @@ export default class AccountForm extends React.Component {
                 <div className="form">
                     {!!this.state.imageUrl ? 
                         <img className="img-thumbnail v-pics" src={this.state.imageUrl} /> : 
-                        <Webcam className="img-thumbnail v-pics"
-                            audio={false}
-                            ref={this.setRef}
-                            screenshotFormat="image/jpeg"
-                        />
+                        <div>
+                            <Camera
+                                ref={(cam) => {
+                                    this.camera = cam;
+                                }}
+                            >
+                            </Camera>
+                            <img
+                                ref={(img) => {
+                                    this.img = img;
+                                }}
+                            />
+                        </div>
                     }
                     <div>
                         <button className="button btn-block" onClick={this.webcamButton}>{ !!this.state.imageUrl ? 'Retake' : 'Capture' }</button>
@@ -176,4 +219,4 @@ export default class AccountForm extends React.Component {
             </div>
         )
     }
-}
+};

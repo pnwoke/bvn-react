@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { DateRangePicker} from 'react-dates';
-import { setTextFilter, sortByDate, setStartDate, setEndDate } from '../actions/filters';
+import { setTextFilter, sortByDate, setStartDate, setEndDate } from '../../actions/filters';
 
 class AccountListFiters extends React.Component {
     state = {

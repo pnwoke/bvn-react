@@ -1,8 +1,8 @@
 import React from 'react';
 import moment from 'moment';
+import Webcam from 'react-webcam';
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import 'bootstrap/dist/css/bootstrap.css';
 
 export default class AccountForm extends React.Component {
     constructor(props) {
@@ -18,6 +18,7 @@ export default class AccountForm extends React.Component {
             state: props.account ? props.account.state : '',
             country: props.account ? props.account.country : '',
             createdAt: props.account ? moment(props.account.createdAt) : '',
+            imageUrl: props.account ? props.account.imageUrl : '',
             calenderFocused: false,
             error: ''
         };
@@ -35,6 +36,22 @@ export default class AccountForm extends React.Component {
         const otherName = e.target.value;
         this.setState(() => ({ otherName }));
     };
+    onSexChange = (e) => {
+        const sex = e.target.value;
+        this.setState(() => ({ sex }));
+    };
+    onLocalGovtChange = (e) => {
+        const localGovt = e.target.value;
+        this.setState(() => ({ localGovt }));
+    };
+    onStateChange = (e) => {
+        const state = e.target.value;
+        this.setState(() => ({ state }));
+    };
+    onCountryChange = (e) => {
+        const country = e.target.value;
+        this.setState(() => ({ country }));
+    };
     onDateChange = (dateOfBirth) => {
         if (dateOfBirth) {
             this.setState(() => ({ dateOfBirth }));
@@ -42,7 +59,20 @@ export default class AccountForm extends React.Component {
     };
     onFocusChange = ({ focused }) => {
         this.setState(() => ({ calenderFocused: focused }));
-    }
+    };
+    setRef = (webcam) => {
+        this.webcam = webcam;
+    };
+    webcamButton = (e) => {
+        e.preventDefault();
+
+        if (!this.state.imageUrl) {
+            const imageUrl = this.webcam.getScreenshot();;
+            this.setState(() => ({ imageUrl }));
+        } else {
+            this.setState(() => ({ imageUrl: '' }));
+        }
+    };
     onSubmit = (e) => {
         e.preventDefault();
 
@@ -54,6 +84,11 @@ export default class AccountForm extends React.Component {
                 surName: this.state.surName,
                 firstName: this.state.firstName,
                 otherName: this.state.otherName,
+                sex: this.state.sex,
+                localGovt: this.state.localGovt,
+                state: this.state.state,
+                country: this.state.country,
+                imageUrl: this.state.imageUrl,
                 dateOfBirth: this.state.dateOfBirth.valueOf(),
                 createdAt: moment().valueOf()
             });
@@ -61,42 +96,84 @@ export default class AccountForm extends React.Component {
     };
     render() {
         return (
-            <form onSubmit={this.onSubmit}>
-                {this.state.error && <p className="form__error">{this.state.error}</p>}
-                <input
-                    type="text"
-                    placeholder="Surname"
-                    autoFocus
-                    className="text-input"
-                    value={this.state.surName}
-                    onChange={this.onSurNameChange}
-                />
-                <input
-                    type="text"
-                    className="text-input"
-                    placeholder="First Name"
-                    value={this.state.firstName}
-                    onChange={this.onFirstNameChange}
-                />
-                <input
-                    type="text"
-                    className="text-input"
-                    placeholder="Other Name"
-                    value={this.state.otherName}
-                    onChange={this.onOtherNameChange}
-                />
-                <SingleDatePicker
-                    date={this.state.dateOfBirth}
-                    onDateChange={this.onDateChange}
-                    focused={this.state.calenderFocused}
-                    onFocusChange={this.onFocusChange}
-                    numberOfMonths={1}
-                    isOutsideRange={() => false}
-                />
-                <div>
-                    <button className="button">Save Account</button>
+            <div>
+                <div className="form">
+                    {!!this.state.imageUrl ? 
+                        <img className="img-thumbnail v-pics" src={this.state.imageUrl} /> : 
+                        <Webcam className="img-thumbnail v-pics"
+                            audio={false}
+                            ref={this.setRef}
+                            screenshotFormat="image/jpeg"
+                        />
+                    }
+                    <div>
+                        <button className="button btn-block" onClick={this.webcamButton}>{ !!this.state.imageUrl ? 'Retake' : 'Capture' }</button>
+                    </div>
                 </div>
-            </form>
+                <form className="form" onSubmit={this.onSubmit}>
+                    {this.state.error && <p className="form__error">{this.state.error}</p>}
+                    <input
+                        type="text"
+                        placeholder="Surname"
+                        autoFocus
+                        className="text-input"
+                        value={this.state.surName}
+                        onChange={this.onSurNameChange}
+                    />
+                    <input
+                        type="text"
+                        className="text-input"
+                        placeholder="First Name"
+                        value={this.state.firstName}
+                        onChange={this.onFirstNameChange}
+                    />
+                    <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Other Name"
+                        value={this.state.otherName}
+                        onChange={this.onOtherNameChange}
+                    />
+                    <select
+                        className="select"
+                    >
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                    <SingleDatePicker
+                        date={this.state.dateOfBirth}
+                        onDateChange={this.onDateChange}
+                        focused={this.state.calenderFocused}
+                        onFocusChange={this.onFocusChange}
+                        numberOfMonths={1}
+                        isOutsideRange={() => false}
+                    />
+                    <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Local Government Area"
+                        value={this.state.localGovt}
+                        onChange={this.onLocalGovtChange}
+                    />
+                    <input
+                        type="text"
+                        className="text-input"
+                        placeholder="State of Origin"
+                        value={this.state.state}
+                        onChange={this.onStateChange}
+                    />
+                    <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Country of Origin"
+                        value={this.state.country}
+                        onChange={this.onCountryChange}
+                    />
+                    <div>
+                        <button className="button">Save Account</button>
+                    </div>
+                </form>
+            </div>
         )
     }
 }

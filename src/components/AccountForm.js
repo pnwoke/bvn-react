@@ -135,8 +135,9 @@ export default class AccountForm extends React.Component {
                 <div className="form">
                     {!!this.state.imageUrl ? 
                         <img className="img-thumbnail v-pics" src={this.state.imageUrl} /> : 
-                        <div>
+                        <div className="v-pics">
                             <Camera
+                                className="img-thumbnail"
                                 ref={(cam) => {
                                     this.camera = cam;
                                 }}
